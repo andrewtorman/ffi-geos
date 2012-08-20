@@ -1635,4 +1635,52 @@ class GeometryTests < Minitest::Test
     @writer.rounding_precision = 3
     tester['GEOMETRYCOLLECTION (POLYGON ((290 252, 290 140, 185 140, 185 215, 188 235, 290 252)), POLYGON ((80 215, 80 340, 101 340, 188 235, 185 215, 80 215)), POLYGON ((185 140, 80 140, 80 215, 185 215, 185 140)), POLYGON ((101 340, 290 340, 290 252, 188 235, 101 340)))', "MULTIPOINT ((150 210), (210 270), (150 220), (220 210), (215 269))", 10]
   end
+
+  def test_dump_points
+    geom = read('GEOMETRYCOLLECTION(
+      MULTILINESTRING((0 0, 10 10, 20 20), (100 100, 200 200, 300 300)),
+
+      POINT(10 10),
+
+      POLYGON((0 0, 5 0, 5 5, 0 5, 0 0), (1 1, 4 1, 4 4, 1 4, 1 1))
+    )')
+
+    assert_equal([
+      [
+        [
+          Geos.create_point(0, 0),
+          Geos.create_point(10, 10),
+          Geos.create_point(20, 20)
+        ],
+
+        [
+          Geos.create_point(100, 100),
+          Geos.create_point(200, 200),
+          Geos.create_point(300, 300)
+        ]
+      ],
+
+      [
+        Geos.create_point(10, 10)
+      ],
+
+      [
+        [
+          Geos.create_point(0, 0),
+          Geos.create_point(5, 0),
+          Geos.create_point(5, 5),
+          Geos.create_point(0, 5),
+          Geos.create_point(0, 0)
+        ],
+
+        [
+          Geos.create_point(1, 1),
+          Geos.create_point(4, 1),
+          Geos.create_point(4, 4),
+          Geos.create_point(1, 4),
+          Geos.create_point(1, 1)
+        ]
+      ]
+    ], geom.dump_points)
+  end
 end
