@@ -19,7 +19,7 @@ module Geos
 
     if FFIGeos.respond_to?(:GEOSGeomGetNumPoints_r)
       def num_points
-        FFIGeos.GEOSGeomGetNumPoints_r(Geos.current_handle, self.ptr)
+        FFIGeos.GEOSGeomGetNumPoints_r(Geos.current_handle_pointer, self.ptr)
       end
     else
       def num_points
@@ -32,7 +32,7 @@ module Geos
         raise Geos::IndexBoundsError.new
       else
         cast_geometry_ptr(
-          FFIGeos.GEOSGeomGetPointN_r(Geos.current_handle, self.ptr, n), {
+          FFIGeos.GEOSGeomGetPointN_r(Geos.current_handle_pointer, self.ptr, n), {
             :srid_copy => self.srid
           }
         )
@@ -52,7 +52,7 @@ module Geos
       options = Constants::BUFFER_PARAM_DEFAULTS.merge(options)
 
       cast_geometry_ptr(FFIGeos.GEOSOffsetCurve_r(
-          Geos.current_handle,
+          Geos.current_handle_pointer,
           self.ptr,
           width,
           options[:quad_segs],
@@ -65,7 +65,7 @@ module Geos
 
     if FFIGeos.respond_to?(:GEOSisClosed_r)
       def closed?
-        bool_result(FFIGeos.GEOSisClosed_r(Geos.current_handle, self.ptr))
+        bool_result(FFIGeos.GEOSisClosed_r(Geos.current_handle_pointer, self.ptr))
       end
     end
 
