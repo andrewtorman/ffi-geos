@@ -1012,7 +1012,7 @@ module Geos
     }
 
     begin
-      ffi_lib('/app/lib')
+      ffi_lib('/app/lib/libgeos_c.so')
 
       FFI_LAYOUT.each do |fun, ary|
         ret = ary.shift
