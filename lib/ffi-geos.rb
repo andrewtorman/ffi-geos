@@ -3,7 +3,7 @@
 require 'ffi'
 require 'rbconfig'
 require 'ffi-geos/version'
-require "rgeo"
+require 'rgeo'
 
 module Geos
   GEOS_BASE = File.join(File.dirname(__FILE__), 'ffi-geos')
