@@ -49,15 +49,21 @@ module Geos
     File.join(GEOS_BASE, 'interrupt')
 
   module FFIGeos
-     def self.search_paths
+    def self.search_paths
       @search_paths ||= begin
-        ['/app/lib']
+        if ENV['GEOS_LIBRARY_PATH']
+          [ ENV['GEOS_LIBRARY_PATH'] ]
+        elsif FFI::Platform::IS_WINDOWS
+          ENV['PATH'].split(File::PATH_SEPARATOR)
+        else
+          [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}', '/usr/lib/{x86_64,i386}-linux-gnu' ]
+        end
       end
     end
 
     def self.find_lib(lib)
-      if File.file?('/app/lib')
-        '/app/lib'
+      if ENV['GEOS_LIBRARY_PATH'] && File.file?(ENV['GEOS_LIBRARY_PATH'])
+        ENV['GEOS_LIBRARY_PATH']
       else
         Dir.glob(search_paths.map { |path|
           File.expand_path(File.join(path, "#{lib}.#{FFI::Platform::LIBSUFFIX}{,.?}"))
