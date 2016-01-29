@@ -73,7 +73,7 @@ module Geos
     def self.geos_library_path
       @geos_library_path ||= begin
         # On MingW the libraries have version numbers
-        '/app/lib'
+        find_lib('{lib,}geos_c{,-?}')
       end
     end
 
@@ -1029,7 +1029,7 @@ module Geos
       FFIGeos.GEOSversion
 
     rescue LoadError, NoMethodError
-      raise LoadError.new("Couldn't load the GEOS CAPI library.")
+      raise LoadError.new("Couldn't load the GEOS CAPI library. path = #{geos_library_path} and the function returns #{find_lib('{lib,}geos_c{,-?}')}")
     end
   end
 
