@@ -49,14 +49,14 @@ module Geos
     File.join(GEOS_BASE, 'interrupt')
 
   module FFIGeos
-    def self.search_paths
+     def self.search_paths
       @search_paths ||= begin
-        [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}', '/usr/lib/{x86_64,i386}-linux-gnu','/app/lib' ]
+        ['/app/lib']
       end
     end
 
     def self.find_lib(lib)
-      if '/app/lib' && File.file?('/app/lib')
+      if File.file?('/app/lib')
         '/app/lib'
       else
         Dir.glob(search_paths.map { |path|
