@@ -6,6 +6,7 @@ require 'ffi-geos/version'
 
 module Geos
   GEOS_BASE = File.join(File.dirname(__FILE__), 'ffi-geos')
+  GEOS_CUSTOM_PATH = '/app/lib'
 
   autoload :WktReader,
     File.join(GEOS_BASE, 'wkt_reader')
@@ -51,10 +52,8 @@ module Geos
   module FFIGeos
     def self.search_paths
       @search_paths ||= begin
-        if ENV['GEOS_LIBRARY_PATH']
-          [ ENV['GEOS_LIBRARY_PATH'] ]
-        elsif FFI::Platform::IS_WINDOWS
-          ENV['PATH'].split(File::PATH_SEPARATOR)
+        if GEOS_CUSTOM_PATH
+          [ GEOS_CUSTOM_PATH ]
         else
           [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}', '/usr/lib/{x86_64,i386}-linux-gnu' ]
         end
@@ -62,8 +61,8 @@ module Geos
     end
 
     def self.find_lib(lib)
-      if ENV['GEOS_LIBRARY_PATH'] && File.file?(ENV['GEOS_LIBRARY_PATH'])
-        ENV['GEOS_LIBRARY_PATH']
+      if GEOS_CUSTOM_PATH && File.file?(GEOS_CUSTOM_PATH)
+        GEOS_CUSTOM_PATH
       else
         Dir.glob(search_paths.map { |path|
           File.expand_path(File.join(path, "#{lib}.#{FFI::Platform::LIBSUFFIX}{,.?}"))
